@@ -25,5 +25,5 @@ public class BasicGenerator : IIncrementalGenerator
             public void SayHello() => Console.WriteLine("Hello from generated code!");
         }
 
-    """;
+        """;
 }
