@@ -16,7 +16,9 @@ public class BuilderTests
                 .CloseScope()
             .CloseScope();
 
-        Assert.Equal(Expected, builder.Build());
+        Assert.Equal(
+            NormalizeNewlines(Expected),
+            NormalizeNewlines(builder.Build()));
     }
 
     private static readonly string Expected = """
@@ -31,4 +33,6 @@ public class BuilderTests
         }
 
         """;
+
+    private static string NormalizeNewlines(string input) => input.Replace("\r\n", "\n");
 }
