@@ -1,8 +1,8 @@
-﻿using System.Text;
+﻿namespace SourceGeneratorFun.Generators1;
+
+using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
-
-namespace BasicGenerator;
 
 [Generator]
 public class BasicGenerator : IIncrementalGenerator

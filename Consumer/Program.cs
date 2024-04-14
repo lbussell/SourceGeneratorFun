@@ -1,8 +1,8 @@
-﻿namespace MyProject;
+﻿namespace SourceGeneratorFun.Consumer;
 
 using GeneratedNamespace;
 
-partial class Program
+public class Program
 {
     static void Main(string[] args)
     {

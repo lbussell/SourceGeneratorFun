@@ -3,4 +3,8 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" PrivateAssets="all" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\CsharpBuilder\CsharpBuilder.csproj" GeneratePathProperty="true" PrivateAssets="all"/>
+  </ItemGroup>
 </Project>

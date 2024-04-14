@@ -1,0 +1,8 @@
+{
+    "Classes": [
+        {
+            "name": "Dog",
+            "says": "Woof"
+        }
+    ]
+}

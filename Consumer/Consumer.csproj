@@ -5,12 +5,18 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <LangVersion>12</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Generators\BasicGenerator\BasicGenerator.csproj"
-      OutputItemType="Analyzer"
-      ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\Generators\BasicGenerator\BasicGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\Generators\FileTransformGenerator\FileTransformGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+
+    <!-- Known issue: Referencing projects from source generators is cursed.
+      Just include a reference here to make life easy when you are working within one solution.
+      Don't bother referencing outside packages unless you enjoy pain.
+      https://github.com/dotnet/roslyn/discussions/47517 -->
+    <ProjectReference Include="..\CsharpBuilder\CsharpBuilder.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <!-- The following MSBuild logic is for viewing generated files.
