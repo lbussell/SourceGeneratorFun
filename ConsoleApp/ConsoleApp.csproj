@@ -5,15 +5,27 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-
-    <!-- Uncomment for debugging -->
-    <!-- <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
-    <CompilerGeneratedFilesOutputPath>gen</CompilerGeneratedFilesOutputPath> -->
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BasicGenerator\BasicGenerator.csproj"
       OutputItemType="Analyzer"
       ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <!-- The following MSBuild logic is for viewing generated files.
+    Normally you wouldn't want to check these files in, but they are checked-in
+    here to make the code easier to understand. -->
+  <PropertyGroup>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <CompilerGeneratedFilesOutputPath>gen</CompilerGeneratedFilesOutputPath>
+  </PropertyGroup>
+
+  <!-- Exclude previously emitted files from the build. The compiler only uses
+    the in-memory generated code, but since we are leaving the files on the disk
+    we need to exclude them from the build so as to not have duplicate code.
+    Known issue: files aren't cleaned before re-generating. -->
+  <ItemGroup>
+    <Compile Remove="$(CompilerGeneratedFilesOutputPath)\**"/>
   </ItemGroup>
 </Project>
