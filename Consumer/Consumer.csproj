@@ -13,8 +13,8 @@
     <ProjectReference Include="..\Generators\FileTransformGenerator\FileTransformGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 
     <!-- Known issue: Referencing projects from source generators is cursed.
-      Just include a reference here to make life easy when you are working within one solution.
-      Don't bother referencing outside packages unless you enjoy pain.
+      Just include a reference here to make life easy when you are working
+      within one solution.
       https://github.com/dotnet/roslyn/discussions/47517 -->
     <ProjectReference Include="..\CsharpBuilder\CsharpBuilder.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
@@ -33,5 +33,12 @@
     Known issue: files aren't cleaned before re-generating. -->
   <ItemGroup>
     <Compile Remove="$(CompilerGeneratedFilesOutputPath)\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="Inputs\FileTransformGenerator\Cat.json" />  <!-- logging will be controlled by default, or global value -->
+    <AdditionalFiles Include="Inputs\FileTransformGenerator\Dog.json" />  <!-- logging will be controlled by default, or global value -->
+    <AdditionalFiles Include="Inputs\FileTransformGenerator\Multiple.json" />  <!-- logging will be controlled by default, or global value -->
+    <!-- <AdditionalFiles Include="file3.txt" MyGenerator_EnableLogging="false" /> -->
   </ItemGroup>
 </Project>

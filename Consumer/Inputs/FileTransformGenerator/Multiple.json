@@ -1,12 +1,10 @@
-{
-    "Classes": [
-        {
-            "name": "Human",
-            "says": "Hello"
-        },
-        {
-            "name": "Iguana",
-            "says": "..."
-        }
-    ]
-}
+[
+    {
+        "Name": "Human",
+        "Says": "Hello"
+    },
+    {
+        "Name": "Iguana",
+        "Says": "..."
+    }
+]

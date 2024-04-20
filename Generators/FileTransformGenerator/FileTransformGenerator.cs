@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Text.Json;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using SourceGeneratorFun.Builders;
@@ -11,57 +12,50 @@ public class FileTransformGenerator : IIncrementalGenerator
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         context.RegisterPostInitializationOutput(static postInitializationContext =>
-                postInitializationContext.AddSource(
-                    $"{nameof(FileTransformGenerator)}.g.cs",
-                    SourceText.From(CodeGenerator.GeneratedInterface, Encoding.UTF8)));
+            postInitializationContext.AddSource(
+                $"{nameof(FileTransformGenerator)}.g.cs",
+                SourceText.From(CodeGenerator.GeneratedInterface, Encoding.UTF8)));
 
-        // var pipeline = context.AdditionalTextsProvider
-        //     .Where(static (text) => text.Path.EndsWith(".json"))
-        //     .Select(static (text, cancellationToken) =>
-        //     {
-        //         string name = Path.GetFileName(text.Path);
+        var pipeline = context.AdditionalTextsProvider
+            .Where(static (text) => text.Path.EndsWith(".json"))
+            .SelectMany(GetClassCreationInfos)
+            .Select(CodeGenerator.GenerateClassDefinition);
 
-        //         SourceText additionalText = text.GetText(cancellationToken)
-        //             ?? throw new InvalidOperationException($"There was an error reading from {text.Path}");
-
-        //         var code = MyJsonToCSharpCompiler.Compile(additionalText);
-        //         return (name, code);
-        //     });
-
-        // context.RegisterSourceOutput(pipeline,
-        //     static (context, pair) =>
-        //         context.AddSource($"{pair.name}.g.cs", SourceText.From(pair.code, Encoding.UTF8)));
+        context.RegisterSourceOutput(pipeline, static (context, classDefinition) =>
+            context.AddSource(
+                $"{classDefinition.Name}.g.cs",
+                SourceText.From(classDefinition.Text, Encoding.UTF8)));
     }
+
+    // One-to-many mapping
+    private static IEnumerable<ClassCreationInfo> GetClassCreationInfos(AdditionalText text, CancellationToken ct) =>
+        JsonSerializer.Deserialize<ClassCreationInfo[]>(text.GetText(ct)?.ToString() ?? "") ?? [];
 }
 
-// internal record Thing(string Name, string Says);
+internal record ClassCreationInfo(string Name, string Says);
+
+internal record ClassDefinition(string Name, string Text);
 
 internal static class CodeGenerator
 {
-    // public static string GeneratedNamespace = new CsharpBuilder()
-    //     .AppendLine("namespace FileTransformGenerator;")
-    //     .Build();
-
     public static string GeneratedNamespace = nameof(FileTransformGenerator);
 
+    public static string GeneratedInterfaceName = "SaysHello";
+    public static string GeneratedMethodSignature = "void SayHello()";
     public static string GeneratedInterface = new CsharpBuilder()
         .WithNamespace(GeneratedNamespace)
         .NewLine()
-        .OpenScope("public interface SaysHello")
-            .AppendLine("void SayHello();")
+        .OpenScope($"public interface {GeneratedInterfaceName}")
+            .AppendLine(GeneratedMethodSignature + ";")
         .CloseScope()
         .Build();
+
+    public static ClassDefinition GenerateClassDefinition(ClassCreationInfo data, CancellationToken _) =>
+        new(data.Name, new CsharpBuilder()
+            .WithNamespace(GeneratedNamespace)
+            .NewLine()
+            .OpenScope($"public class {data.Name} : {GeneratedInterfaceName}")
+                .AppendLine($"public {GeneratedMethodSignature} => Console.WriteLine(\"{data.Says}\");")
+            .CloseScope()
+            .Build());
 }
-
-// internal sealed class MyJsonToCSharpCompiler
-// {
-//     public static string Compile(SourceText json)
-//     {
-//         // return json.;
-//     }
-
-//     private static string Compile(string json)
-//     {
-//         return "";
-//     }
-// }
