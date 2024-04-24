@@ -10,8 +10,6 @@ public sealed class CsharpBuilder(int Spaces = 4)
 
     private string Indentation => new(' ', _indentationLevel * Spaces);
 
-    private string GetIndentation(int level) => new(' ', level * Spaces);
-
     public CsharpBuilder WithNamespace(string name)
     {
         _builder.Insert(0, $"namespace {name};" + Environment.NewLine);
